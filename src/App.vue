@@ -6,7 +6,20 @@ import EventLog from '@/components/EventLog.vue'
 import GameOverModal from '@/components/GameOverModal.vue'
 import { useGame } from '@/composables/useGame'
 
-const { state, highScore, canPerformAction, gatherWood, gatherStone, hunt, drink, restart } = useGame()
+const {
+  state,
+  highScore,
+  canPerformAction,
+  gatherWood,
+  gatherStone,
+  hunt,
+  drink,
+  buildShelter,
+  restart,
+  SHELTER_COST_WOOD,
+  SHELTER_COST_STONE,
+  MAX_SHELTER_LEVEL,
+} = useGame()
 
 const isNewRecord = computed(() => state.value.turn >= highScore.value && state.value.turn > 0)
 </script>
@@ -45,6 +58,9 @@ const isNewRecord = computed(() => state.value.turn >= highScore.value && state.
             :thirst="state.thirst"
             :wood="state.wood"
             :stone="state.stone"
+            :shelter-level="state.shelterLevel"
+            :max-shelter-level="MAX_SHELTER_LEVEL"
+            :is-night="state.isNight"
           />
         </div>
 
@@ -54,11 +70,18 @@ const isNewRecord = computed(() => state.value.turn >= highScore.value && state.
             :can-gather-stone="canPerformAction('gatherStone')"
             :can-hunt="canPerformAction('hunt')"
             :can-drink="canPerformAction('drink')"
+            :can-build-shelter="canPerformAction('buildShelter')"
             :disabled="state.isGameOver"
+            :is-night="state.isNight"
+            :shelter-level="state.shelterLevel"
+            :max-shelter-level="MAX_SHELTER_LEVEL"
+            :shelter-cost-wood="SHELTER_COST_WOOD"
+            :shelter-cost-stone="SHELTER_COST_STONE"
             @gather-wood="gatherWood"
             @gather-stone="gatherStone"
             @hunt="hunt"
             @drink="drink"
+            @build-shelter="buildShelter"
           />
         </div>
 
@@ -68,7 +91,7 @@ const isNewRecord = computed(() => state.value.turn >= highScore.value && state.
       </div>
 
       <footer class="mt-8 text-center text-gray-500 text-sm">
-        <p>💡 提示：生命值归零或饥饿/口渴值满格则游戏结束</p>
+        <p>💡 提示：生命值归零或饥饿/口渴值满格则游戏结束 | 🏠 白天搭建庇护所可减少夜晚体力损耗</p>
       </footer>
     </div>
 
@@ -77,6 +100,8 @@ const isNewRecord = computed(() => state.value.turn >= highScore.value && state.
       :final-turn="state.turn"
       :high-score="highScore"
       :is-new-record="isNewRecord"
+      :shelter-level="state.shelterLevel"
+      :total-shelter-bonus="state.totalShelterBonus"
       @restart="restart"
     />
   </div>

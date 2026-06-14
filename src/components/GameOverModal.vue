@@ -4,6 +4,8 @@ interface Props {
   finalTurn: number
   highScore: number
   isNewRecord: boolean
+  shelterLevel: number
+  totalShelterBonus: number
 }
 
 defineProps<Props>()
@@ -31,6 +33,20 @@ const emit = defineEmits<{
               <div class="flex justify-between items-center">
                 <span class="text-gray-400">生存回合</span>
                 <span class="text-2xl font-bold text-white">{{ finalTurn }}</span>
+              </div>
+              <div class="border-t border-gray-700"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-400">🏠 庇护所等级</span>
+                <span class="text-xl font-bold text-emerald-400">
+                  {{ shelterLevel }} 级
+                </span>
+              </div>
+              <div class="border-t border-gray-700"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-400">🛡️ 庇护所累计保护</span>
+                <span class="text-xl font-bold text-emerald-400">
+                  +{{ totalShelterBonus }} 生命值
+                </span>
               </div>
               <div class="border-t border-gray-700"></div>
               <div class="flex justify-between items-center">

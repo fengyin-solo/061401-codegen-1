@@ -7,6 +7,9 @@ export interface GameState {
   turn: number
   isGameOver: boolean
   logs: LogEntry[]
+  shelterLevel: number
+  isNight: boolean
+  totalShelterBonus: number
 }
 
 export interface LogEntry {
@@ -29,7 +32,7 @@ export interface RandomEvent {
   }
 }
 
-export type ActionType = 'gatherWood' | 'gatherStone' | 'hunt' | 'drink'
+export type ActionType = 'gatherWood' | 'gatherStone' | 'hunt' | 'drink' | 'buildShelter'
 
 export interface ActionEffect {
   health?: number

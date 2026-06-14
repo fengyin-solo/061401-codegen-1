@@ -17,6 +17,9 @@ interface Props {
   thirst: number
   wood: number
   stone: number
+  shelterLevel: number
+  maxShelterLevel: number
+  isNight: boolean
 }
 
 const props = defineProps<Props>()
@@ -64,6 +67,14 @@ const stats = computed<StatItem[]>(() => [
     color: 'text-gray-400',
     barColor: 'bg-gray-400',
   },
+  {
+    label: '庇护所',
+    value: props.shelterLevel,
+    max: props.maxShelterLevel,
+    icon: '🏠',
+    color: 'text-emerald-400',
+    barColor: 'bg-emerald-500',
+  },
 ])
 
 function getBarWidth(value: number, max: number): string {
@@ -82,9 +93,19 @@ function isDanger(value: number, max: number, isReverse?: boolean): boolean {
 
 <template>
   <div class="bg-game-card rounded-2xl p-6 border border-game-border shadow-xl">
-    <h2 class="text-xl font-bold text-white mb-5 flex items-center gap-2">
-      <span>📊</span>
-      <span>生存状态</span>
+    <h2 class="text-xl font-bold text-white mb-5 flex items-center justify-between">
+      <span class="flex items-center gap-2">
+        <span>📊</span>
+        <span>生存状态</span>
+      </span>
+      <span
+        :class="[
+          'px-3 py-1 rounded-full text-sm font-medium',
+          isNight ? 'bg-indigo-900/50 text-indigo-300' : 'bg-yellow-900/50 text-yellow-300',
+        ]"
+      >
+        {{ isNight ? '🌙 夜晚' : '☀️ 白天' }}
+      </span>
     </h2>
     <div class="space-y-4">
       <div
