@@ -145,7 +145,7 @@ export function useGame() {
     return true
   }
 
-  function performNightSettlement() {
+  function performNightSettlement(): boolean {
     const penalty = nightPenalties[state.value.shelterLevel]
     const basePenalty = nightPenalties[0]
 
@@ -161,18 +161,22 @@ export function useGame() {
     } else {
       addLog(`❄️ 没有庇护所，严寒使你的生命值大幅下降`, 'bad')
     }
+
+    checkGameOver()
+    return state.value.isGameOver
   }
 
-  function updateDayNightCycle(newTurn: number) {
+  function updateDayNightCycle(newTurn: number): boolean {
     const dayCycle = Math.floor((newTurn - 1) / TURNS_PER_DAY)
     const wasNight = state.value.isNight
     state.value.isNight = dayCycle % 2 === 1
 
     if (!wasNight && state.value.isNight) {
-      performNightSettlement()
+      return performNightSettlement()
     } else if (wasNight && !state.value.isNight) {
       addLog(`☀️ 新的一天开始了，抓紧时间收集资源吧`, 'system')
     }
+    return false
   }
 
   function performAction(action: ActionType) {
@@ -180,6 +184,9 @@ export function useGame() {
 
     const effects = actionEffects[action]
     applyEffects(effects)
+
+    checkGameOver()
+    if (state.value.isGameOver) return
 
     if (action === 'buildShelter') {
       state.value.shelterLevel++
@@ -195,7 +202,8 @@ export function useGame() {
       addLog(`🏠 庇护所已升级到 ${state.value.shelterLevel} 级！`, 'good')
     }
 
-    updateDayNightCycle(newTurn)
+    const diedAtNight = updateDayNightCycle(newTurn)
+    if (diedAtNight) return
 
     if (state.value.isGameOver) return
 
